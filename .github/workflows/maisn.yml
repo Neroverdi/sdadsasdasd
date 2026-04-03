@@ -23,7 +23,7 @@ jobs:
             Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
           }
           Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
-          .\ngrok.exe config add-authtoken 3Bqh81RwbirhFXmS9j3cse0RDxW_25pQqk4crpiy3bj4sHkr8
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
           Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
           Start-Sleep -Seconds 8
           $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
@@ -42,12 +42,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
@@ -62,12 +66,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
@@ -82,12 +90,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
@@ -102,12 +114,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
@@ -122,12 +138,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
@@ -142,12 +162,16 @@ jobs:
           New-LocalUser -Name "rdpuser" -Password $pass -PasswordNeverExpires -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Administrators" -Member "rdpuser" -ErrorAction SilentlyContinue
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "rdpuser" -ErrorAction SilentlyContinue
-          Stop-Process -Name "ssh" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "ssh" -ArgumentList "-o StrictHostKeyChecking=no -p 443 -R0:localhost:3389 tcp@a.pinggy.io" -RedirectStandardOutput "pinggy.log" -RedirectStandardError "pinggy_err.log" -NoNewWindow
-          Start-Sleep -Seconds 15
-          $log = (Get-Content "pinggy.log" -ErrorAction SilentlyContinue) + (Get-Content "pinggy_err.log" -ErrorAction SilentlyContinue) -join "`n"
-          $match = [regex]::Match($log, 'tcp://[0-9a-zA-Z\.\-]+:[0-9]+')
-          $clean = $match.Value -replace 'tcp://',''
+          if (-not (Test-Path "ngrok.exe")) {
+            Invoke-WebRequest -Uri "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+            Expand-Archive -Path "ngrok.zip" -DestinationPath "." -Force
+          }
+          Stop-Process -Name "ngrok" -ErrorAction SilentlyContinue
+          .\ngrok.exe config add-authtoken 3ADvwGsqMHo6RDmYjXwwhRf5eTy_4PoMfkswQrNRH3eXPrQLZ
+          Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389" -NoNewWindow
+          Start-Sleep -Seconds 8
+          $tunnels = Invoke-RestMethod -Uri "http://localhost:4040/api/tunnels"
+          $clean = $tunnels.tunnels[0].public_url -replace 'tcp://',''
           $body = '{"content":"RDP: ' + $clean + '\nUser: rdpuser\nPass: Venom123!"}'
           Invoke-RestMethod -Uri "https://discord.com/api/webhooks/1461013177658769602/mjg15yU9egXIhpHMvomG2Brb5ASM8WJ8ca0CE-Foi_HHpTXox_LfTsYOLH-bv1xgzSKc" -Method Post -Body $body -ContentType "application/json" -ErrorAction SilentlyContinue
           Start-Sleep -Seconds 3000
